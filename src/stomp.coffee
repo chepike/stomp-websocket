@@ -256,6 +256,7 @@ class Client
             # on the browser side (e.g. [RabbitMQ's temporary
             # queues](http://www.rabbitmq.com/stomp.html)).
             subscription = frame.headers.subscription
+			destination = frame.headers.destination
             onreceive = @subscriptions[subscription] or @onreceive
             if onreceive
               client = this
@@ -265,7 +266,7 @@ class Client
               frame.ack = (headers = {}) =>
                 client .ack messageID , subscription, headers
               frame.nack = (headers = {}) =>
-                client .nack messageID, subscription, headers
+                client .nack messageID, destination, headers
               onreceive frame
             else
               @debug? "Unhandled received MESSAGE: #{frame}"
